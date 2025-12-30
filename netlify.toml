@@ -12,6 +12,13 @@
   # Node.js version
   NODE_VERSION = "18"
 
+# API Proxy to handle CORS
+[[redirects]]
+  from = "/api/*"
+  to = "https://bank-4-yt2f.onrender.com/:splat"
+  status = 200
+  force = true
+
 # Redirect rules for SPA (Single Page Application)
 [[redirects]]
   from = "/*"
