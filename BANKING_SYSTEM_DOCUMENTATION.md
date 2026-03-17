@@ -49,8 +49,8 @@ This is a comprehensive **Full Stack Banking System** built with modern web tech
 - **React Toastify 11.0.5**: Toast notifications
 
 ### Backend:
-- **FastAPI**: Python web framework (hosted on Render)
-- **PostgreSQL**: Database for data persistence
+- **FastAPI**: Python web framework
+- **MongoDB**: NoSQL database for flexible document storage
 - **JWT**: JSON Web Tokens for authentication
 - **Pydantic**: Data validation and serialization
 
@@ -66,10 +66,10 @@ This is a comprehensive **Full Stack Banking System** built with modern web tech
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Backend API   │    │   Database      │
-│   (React)       │◄──►│   (FastAPI)     │◄──►│  (PostgreSQL)   │
+│   (React)       │◄──►│   (FastAPI)     │◄──►│   (MongoDB)     │
 │                 │    │                 │    │                 │
-│ - Components    │    │ - Authentication│    │ - Users Table   │
-│ - Pages         │    │ - User CRUD     │    │ - Accounts Table│
+│ - Components    │    │ - Authentication│    │ - Users Coll.   │
+│ - Pages         │    │ - User CRUD     │    │ - Accounts Coll.│
 │ - Context       │    │ - Account CRUD  │    │ - Transactions  │
 │ - Routing       │    │ - Transactions  │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
@@ -295,40 +295,44 @@ const checkAdminAccess = async () => {
 
 ## Database Design
 
-### Users Table:
-```sql
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    mob_no BIGINT NOT NULL,
-    hashed_password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+### Users Collection:
+```javascript
+// MongoDB Document Structure
+{
+  _id: ObjectId("..."),
+  user_id: 1,
+  username: "john_doe",
+  email: "john@example.com",
+  mob_no: 9876543210,
+  hashed_password: "encrypted_password_hash",
+  role: "user", // or "admin"
+  created_at: ISODate("2025-01-01T10:00:00Z")
+}
 ```
 
-### Accounts Table:
-```sql
-CREATE TABLE accounts (
-    acc_no SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(user_id),
-    acc_holder_name VARCHAR(100) NOT NULL,
-    acc_holder_address TEXT NOT NULL,
-    dob DATE NOT NULL,
-    gender VARCHAR(10) NOT NULL,
-    acc_type VARCHAR(20) NOT NULL,
-    balance DECIMAL(15,2) DEFAULT 0.00,
-    ifsc_code VARCHAR(11) NOT NULL,
-    branch VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+### Accounts Collection:
+```javascript
+// MongoDB Document Structure
+{
+  _id: ObjectId("..."),
+  acc_no: 1001,
+  user_id: 1,
+  acc_holder_name: "John Doe",
+  acc_holder_address: "123 Main St, City",
+  dob: "1990-01-01",
+  gender: "male",
+  acc_type: "savings",
+  balance: 5000.00,
+  ifsc_code: "BANK0001001",
+  branch: "Main Branch",
+  created_at: ISODate("2025-01-01T10:00:00Z")
+}
 ```
 
 ### Relationships:
 - **One-to-Many**: User → Accounts (One user can have multiple accounts)
-- **Foreign Key**: accounts.user_id references users.user_id
-- **Cascade**: Account operations depend on user existence
+- **Reference**: accounts.user_id references users.user_id
+- **Embedded Documents**: Transaction history can be embedded in accounts
 
 ---
 
@@ -426,7 +430,7 @@ POST /accounts/
 2. **JWT Authentication**: Stateless token validation
 3. **CORS Configuration**: Cross-origin request handling
 4. **Input Sanitization**: Pydantic validation
-5. **SQL Injection Prevention**: ORM usage
+5. **NoSQL Injection Prevention**: MongoDB parameterized queries
 
 ### Best Practices Implemented:
 - **Principle of Least Privilege**: Role-based access
@@ -632,10 +636,11 @@ try {
 **Q6: Explain the database relationships in your system.**
 
 **A:** 
-- **Users Table**: Primary entity with user credentials and profile
-- **Accounts Table**: Foreign key relationship to users (user_id)
+- **Users Collection**: Primary document with user credentials and profile
+- **Accounts Collection**: References users via user_id field
 - **One-to-Many**: One user can have multiple bank accounts
-- **Referential Integrity**: Cascade operations maintain data consistency
+- **Document References**: MongoDB references maintain data relationships
+- **Flexible Schema**: NoSQL allows for easy schema evolution
 
 **Q7: How do you handle transactions (deposits/withdrawals)?**
 
@@ -655,7 +660,7 @@ try {
 - **JWT Tokens**: Time-limited authentication tokens
 - **HTTPS**: Encrypted data transmission
 - **Input Validation**: Client and server-side validation
-- **SQL Injection Prevention**: Parameterized queries/ORM
+- **NoSQL Injection Prevention**: MongoDB parameterized queries/ODM
 - **XSS Protection**: React's built-in sanitization
 - **Role-based Access**: Principle of least privilege
 
@@ -664,7 +669,7 @@ try {
 **A:**
 - **CSRF**: JWT tokens instead of cookies
 - **XSS**: React's automatic escaping + input validation
-- **SQL Injection**: ORM usage + parameterized queries
+- **NoSQL Injection**: MongoDB ODM usage + parameterized queries
 - **Authentication**: Secure token-based system
 - **Authorization**: Role-based access control
 - **Data Validation**: Pydantic models on backend

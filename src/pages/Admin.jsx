@@ -532,6 +532,14 @@ const Admin = () => {
           </table>
         </div>
       </div>
+        {/* Footer */}
+      <footer className="bg-gray-800 text-white py-4">
+        <div className="text-center">
+          <p className="text-sm">
+            © 2025 Niranjan Kasote All Rights Reserved
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
