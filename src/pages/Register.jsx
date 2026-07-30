@@ -38,7 +38,7 @@ const Register = () => {
         email: "",
         mob_no: "",
         password: "",
-        role: "user",
+        role: "",
       });
     } catch (error) {
       toast.error("Registration failed! Please try again.");
