@@ -38,7 +38,7 @@ const Register = () => {
         email: "",
         mob_no: "",
         password: "",
-        role: "",
+        role: "user",
       });
     } catch (error) {
       toast.error("Registration failed! Please try again.");
@@ -95,7 +95,7 @@ const Register = () => {
         >
           <option value="">Select Role</option>
           <option value="user">User</option>
-          <option value="admin">Admin</option>
+     
         </select>
 
         <Button type="submit">Create Account</Button>
