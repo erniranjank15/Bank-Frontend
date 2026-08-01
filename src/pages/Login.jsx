@@ -62,8 +62,18 @@ const Login = () => {
           required
         />
 
+        {/* Forgot password link */}
+        <div className="mb-4 text-right">
+          <a
+            href="/forgot-password"
+            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
         <Button type="submit">Sign In</Button>
-        
+
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{' '}
           <a href="/register" className="text-blue-600 hover:text-blue-500 font-medium">
