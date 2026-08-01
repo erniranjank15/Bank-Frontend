@@ -41,16 +41,16 @@ export const AuthProvider = ({ children }) => {
       const formData = new URLSearchParams();
       formData.append('username', data.username);
       formData.append('password', data.password);
-      
+
       const res = await axios.post(`${API_URL}/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      
+
       setToken(res.data.access_token);
       localStorage.setItem("token", res.data.access_token);
-      
+
       // Get user info
       const userRes = await axios.get(`${API_URL}/users/profile`, {
         headers: {
@@ -58,11 +58,15 @@ export const AuthProvider = ({ children }) => {
         }
       });
       setUser(userRes.data);
-      
+
       toast.success("Login successful!");
       return res.data;
     } catch (error) {
-      toast.error("Login failed! Please check your credentials.");
+      // Show the actual backend error message if available
+      const message =
+        error?.response?.data?.detail ||
+        (error?.request ? "Server is not responding. Please try again." : "Login failed! Please try again.");
+      toast.error(message);
       throw error;
     }
   };
@@ -77,12 +81,16 @@ export const AuthProvider = ({ children }) => {
         hashed_password: data.password,
         role: data.role || "user"
       };
-      
+
       const res = await axios.post(`${API_URL}/users/`, registerData);
       toast.success("Registration successful!");
       return res.data;
     } catch (error) {
-      toast.error("Registration failed! Please try again.");
+      // Show the actual backend error message if available
+      const message =
+        error?.response?.data?.detail ||
+        (error?.request ? "Server is not responding. Please try again." : "Registration failed! Please try again.");
+      toast.error(message);
       throw error;
     }
   };

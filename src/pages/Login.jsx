@@ -22,13 +22,13 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(data);
-      
+
       // Get user profile to check role
       const token = localStorage.getItem("token");
       const userRes = await axios.get("https://bank-4-yt2f.onrender.com/users/profile", {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
       // Redirect based on role
       if (userRes.data.role === 'admin') {
         window.location.href = "/admin";
@@ -44,7 +44,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <form onSubmit={handleSubmit} className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-900">Sign In</h2>
-        
+
         <Input
           name="username"
           value={data.username}
@@ -81,7 +81,7 @@ const Login = () => {
           </a>
         </p>
       </form>
-  
+
     </div>
   );
 };

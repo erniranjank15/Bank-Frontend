@@ -41,7 +41,10 @@ const Register = () => {
         role: "",
       });
     } catch (error) {
-      toast.error("Registration failed! Please try again.");
+      const message =
+        error?.response?.data?.detail ||
+        (error?.request ? "Server is not responding. Please try again." : "Registration failed! Please try again.");
+      toast.error(message);
     }
   };
 
@@ -95,11 +98,11 @@ const Register = () => {
         >
           <option value="">Select Role</option>
           <option value="user">User</option>
-             <option value="admin">Admin</option>
+          <option value="admin">Admin</option>
         </select>
 
         <Button type="submit">Create Account</Button>
-        
+
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{' '}
           <a href="/login" className="text-blue-600 hover:text-blue-500 font-medium">
