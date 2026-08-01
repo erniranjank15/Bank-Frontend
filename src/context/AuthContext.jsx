@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
       setUser(userRes.data);
 
       toast.success("Login successful!");
-      return res.data;
+      return { ...res.data, user: userRes.data };
     } catch (error) {
       // Show the actual backend error message if available
       const message =

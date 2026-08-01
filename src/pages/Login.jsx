@@ -3,7 +3,6 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const Login = () => {
   const { login } = useAuth();
@@ -21,16 +20,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(data);
+      // login() returns { access_token, token_type, user: { role, ... } }
+      const result = await login(data);
 
-      // Get user profile to check role
-      const token = localStorage.getItem("token");
-      const userRes = await axios.get("https://bank-4-yt2f.onrender.com/users/profile", {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      // Redirect based on role
-      if (userRes.data.role === 'admin') {
+      // Redirect based on role from the returned user data
+      if (result?.user?.role === 'admin') {
         window.location.href = "/admin";
       } else {
         window.location.href = "/dashboard";
